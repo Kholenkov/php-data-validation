@@ -244,19 +244,20 @@ class DataValidation {
 	public static function validateSnils($snils, &$error_message = null, &$error_code = null) {
 		$result = false;
 		$snils = (string) $snils;
+        	$snils_number = preg_replace('/[^\d]/i', '', $snils);
 		if (!$snils) {
 			$error_code = 1;
 			$error_message = 'СНИЛС пуст';
 		} elseif (preg_match('/[^0-9]/', $snils)) {
 			$error_code = 2;
 			$error_message = 'СНИЛС может состоять только из цифр';
-		} elseif (strlen($snils) !== 11) {
+		} elseif (strlen($snils_number) !== 11) {
 			$error_code = 3;
 			$error_message = 'СНИЛС может состоять только из 11 цифр';
 		} else {
 			$sum = 0;
 			for ($i = 0; $i < 9; $i++) {
-				$sum += (int) $snils{$i} * (9 - $i);
+				$sum += (int)$snils_number{$i} * (9 - $i);
 			}
 			$check_digit = 0;
 			if ($sum < 100) {
@@ -267,7 +268,7 @@ class DataValidation {
 					$check_digit = 0;
 				}
 			}
-			if ($check_digit === (int) substr($snils, -2)) {
+			if ($check_digit === (int)substr($snils_number, -2)) {
 				$result = true;
 			} else {
 				$error_code = 4;
